@@ -22,13 +22,11 @@ const login = async (req, res, next) => {
     return next(new HttpError("Invalid email or password", 401));
   }
 
-  // Compare hashed passwords
   const isValidPassword = await bcrypt.compare(password, existingUser.password);
   if (!isValidPassword) {
     return next(new HttpError("Invalid email or password", 401));
   }
 
-  // Generate JWT
   let accessToken;
   try {
     accessToken = jwt.sign(
@@ -48,7 +46,6 @@ const login = async (req, res, next) => {
   });
 };
 
-// ------------------ SIGNUP ------------------
 const signup = async (req, res, next) => {
   const { email, username, password } = req.body;
 
@@ -56,7 +53,6 @@ const signup = async (req, res, next) => {
     return next(new HttpError("All fields are required", 400));
   }
 
-  // Check for existing user
   let existingUser;
   try {
     existingUser = await User.findOne({ email }).exec();
@@ -68,7 +64,6 @@ const signup = async (req, res, next) => {
     return next(new HttpError("Email already exists", 409));
   }
 
-  // Hash password
   let hashedPassword;
   try {
     hashedPassword = await bcrypt.hash(password, 12);
@@ -76,7 +71,6 @@ const signup = async (req, res, next) => {
     return next(new HttpError("Could not create user, please try again.", 500));
   }
 
-  // Create user
   const newUser = new User({
     email,
     username,
@@ -89,7 +83,6 @@ const signup = async (req, res, next) => {
     return next(new HttpError("Signup failed, please try again later.", 500));
   }
 
-  // Create JWT
   let token;
   try {
     token = jwt.sign({ userId: newUser.id, email }, JWT_SECRET_KEY, {
