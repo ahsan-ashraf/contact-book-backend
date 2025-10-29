@@ -2,6 +2,7 @@ const express = require("express");
 const bodyparser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const connectDB = require("./db");
 
 dotenv.config();
 
@@ -16,16 +17,22 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // your React app URL
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 app.use(bodyparser.json());
-app.use("api/auth", checkAuth, authRoutes);
-app.use("api/contact-book", checkAuth, contactBookRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/contact-book", checkAuth, contactBookRoutes);
 
-app.listen(process.env.PORT, () => {
-  console.log("Server is running on port 5000");
-});
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`Error Connecting to Database: ${err}`);
+  });

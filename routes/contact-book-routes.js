@@ -3,7 +3,7 @@ const contactsController = require("../controllers/contact-book-controller");
 
 const router = express.Router();
 
-router.get("/:uid", contactsController.getAllContacts);
+router.get("/", contactsController.getAllContacts);
 router.post("/add", contactsController.addContact);
 router.patch("/update/:cid", contactsController.editContact);
 router.delete("/delete/:cid", contactsController.deleteContact);
