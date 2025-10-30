@@ -3,6 +3,7 @@ const bodyparser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./db");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
@@ -20,10 +21,12 @@ app.use(
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
 app.use(bodyparser.json());
+app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/contact-book", checkAuth, contactBookRoutes);
 
