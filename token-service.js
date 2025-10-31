@@ -16,7 +16,7 @@ class TokenService {
   generateAccessToken(user) {
     try {
       return jwt.sign(
-        { userId: user._id, email: user.email },
+        { userId: user.userId, email: user.email },
         this.ACCESS_TOKEN_SECRET,
         { expiresIn: this.ACCESS_TOKEN_EXPIRES_IN }
       );
@@ -28,7 +28,7 @@ class TokenService {
   async generateRefreshToken(user, session) {
     try {
       const refreshToken = jwt.sign(
-        { userId: user._id, email: user.email },
+        { userId: user.userId, email: user.email },
         this.REFRESH_TOKEN_SECRET,
         { expiresIn: this.REFRESH_TOKEN_EXPIRES_IN }
       );
@@ -39,7 +39,7 @@ class TokenService {
 
       // Save token in DB
       const tokenDoc = new RefreshToken({
-        userId: user._id,
+        userId: user.userId,
         token: refreshToken,
         expiresAt,
       });

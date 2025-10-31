@@ -28,10 +28,14 @@ const login = async (req, res, next) => {
     return next(new HttpError("Invalid email or password", 401));
   }
 
+  const userPayload = {
+    userId: existingUser._id,
+    email: existingUser.email,
+  };
   let accessToken, refreshToken;
   try {
-    accessToken = tokenService.generateAccessToken(existingUser);
-    refreshToken = await tokenService.generateRefreshToken(existingUser);
+    accessToken = tokenService.generateAccessToken(userPayload);
+    refreshToken = await tokenService.generateRefreshToken(userPayload);
   } catch (err) {
     return next(new HttpError("Login failed, please try again later.", 500));
   }
@@ -89,10 +93,15 @@ const signup = async (req, res, next) => {
     });
     await newUser.save({ session });
 
+    const userPayload = {
+      userId: newUser._id,
+      email: newUser.email,
+    };
+
     // Token creation inside transaction
-    const accessToken = tokenService.generateAccessToken(newUser);
+    const accessToken = tokenService.generateAccessToken(userPayload);
     const refreshToken = await tokenService.generateRefreshToken(
-      newUser,
+      userPayload,
       session
     );
 
