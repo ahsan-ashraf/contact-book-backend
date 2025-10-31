@@ -18,7 +18,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173", // for local dev
-  "https://contact-book-frontend.vercel.app", // replace with your actual Vercel URL later
+  "https://contact-book-frontend-eta.vercel.app", // replace with your actual Vercel URL later
 ];
 
 app.use(
