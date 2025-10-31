@@ -44,7 +44,7 @@ const login = async (req, res, next) => {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // only over https in prod
-    sameSite: "lax", // or 'strict'
+    sameSite: isProduction ? "none" : "lax", // "none" required for cross-site cookies
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // match REFRESH_TOKEN_EXPIRES_IN (7 days)
   });
@@ -112,7 +112,7 @@ const signup = async (req, res, next) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax", // "none" required for cross-site cookies
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -161,7 +161,7 @@ const refreshToken = async (req, res, next) => {
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // only over https in prod
-        sameSite: "lax", // or 'strict'
+        sameSite: isProduction ? "none" : "lax", // "none" required for cross-site cookies
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000, // match REFRESH_TOKEN_EXPIRES_IN (7 days)
       });
