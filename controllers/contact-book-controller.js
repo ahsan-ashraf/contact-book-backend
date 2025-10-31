@@ -92,11 +92,9 @@ const editContact = async (req, res, next) => {
   try {
     const updatedContact = await Contact.findById({ _id: contactId }).exec();
     if (!updatedContact) {
-      const error = new HttpError(
-        "can't update contact, invalid contact id passed",
-        404
+      return next(
+        new HttpError("can't update contact, invalid contact id passed", 404)
       );
-      return next(error);
     }
     updatedContact.name = name;
     updatedContact.phone = phone;
