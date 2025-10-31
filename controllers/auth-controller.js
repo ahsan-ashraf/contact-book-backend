@@ -40,10 +40,11 @@ const login = async (req, res, next) => {
     return next(new HttpError("Login failed, please try again later.", 500));
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
   // Set refresh token as HttpOnly cookie (recommended)
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // only over https in prod
+    secure: isProduction, // only over https in prod
     sameSite: isProduction ? "none" : "lax", // "none" required for cross-site cookies
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // match REFRESH_TOKEN_EXPIRES_IN (7 days)
