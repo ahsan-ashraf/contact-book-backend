@@ -130,8 +130,8 @@ const refreshToken = async (req, res, next) => {
     return res.status(401).json({ message: "No refresh token" });
   }
 
-  const isValid = await tokenService.isRefreshTokenValid(token);
-  if (!isValid)
+  const response = await tokenService.isRefreshTokenValid(token);
+  if (!response.valid)
     return res.status(403).json({ message: "Refresh token revoked" });
 
   jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, payload) => {

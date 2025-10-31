@@ -30,6 +30,14 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/contact-book", checkAuth, contactBookRoutes);
 
+app.use((error, req, res, next) => {
+  console.error("GLOBAL ERROR:", error);
+  res.status(error.code || 500).json({
+    message: error.message || "Unknown Server Error",
+    stack: error.stack, // remove in production
+  });
+});
+
 connectDB()
   .then(() => {
     app.listen(process.env.PORT, () => {
